@@ -66,7 +66,8 @@
 		boxModel: null,
 		inlineBlockNeedsLayout: false,
 		shrinkWrapBlocks: false,
-		reliableHiddenOffsets: true
+		reliableHiddenOffsets: true,
+		scrollsHtml: true
 	};
 
 	// Make sure that the options inside disabled selects aren't marked as disabled
@@ -137,36 +138,41 @@
 	// Figure out if the W3C box model works as expected
 	// document.body must exist before we can do this
 	jQuery(function() {
-		var div = document.createElement("div"),
-			body = document.getElementsByTagName("body")[0];
+		var body = document.getElementsByTagName("body")[0];
 
 		// Frameset documents with no body should not run this code
 		if ( !body ) {
 			return;
 		}
 
+		var div = document.createElement("div"),
+			divStyle = div.style,
+			bodyStyle = body.style,
+			rootStyle = root.style;
+
 		div.style.width = div.style.paddingLeft = "1px";
 		body.appendChild( div );
 		jQuery.boxModel = jQuery.support.boxModel = div.offsetWidth === 2;
 
-		if ( "zoom" in div.style ) {
+		if ( "zoom" in divStyle ) {
 			// Check if natively block-level elements act like inline-block
 			// elements when setting their display to 'inline' and giving
 			// them layout
 			// (IE < 8 does this)
-			div.style.display = "inline";
-			div.style.zoom = 1;
+			divStyle.display = "inline";
+			divStyle.zoom = 1;
 			jQuery.support.inlineBlockNeedsLayout = div.offsetWidth === 2;
 
 			// Check if elements with layout shrink-wrap their children
 			// (IE 6 does this)
-			div.style.display = "";
+			divStyle.display = "";
 			div.innerHTML = "<div style='width:4px;'></div>";
 			jQuery.support.shrinkWrapBlocks = div.offsetWidth !== 2;
 		}
 
 		div.innerHTML = "<table><tr><td style='padding:0;border:0;display:none'></td><td>t</td></tr></table>";
-		var tds = div.getElementsByTagName("td");
+		var tds = div.getElementsByTagName("td"),
+			td = tds[0];
 
 		// Check if table cells still have offsetWidth/Height when they are set
 		// to display:none and there are still other visible table cells in a
@@ -175,18 +181,37 @@
 		// display:none (it is still safe to use offsets if a parent element is
 		// hidden; don safety goggles and see bug #4512 for more information).
 		// (only IE 8 fails this test)
-		jQuery.support.reliableHiddenOffsets = tds[0].offsetHeight === 0;
+		jQuery.support.reliableHiddenOffsets = td.offsetHeight === 0;
 
-		tds[0].style.display = "";
+		td.style.display = "";
 		tds[1].style.display = "none";
 
 		// Check if empty table cells still have offsetWidth/Height
 		// (IE < 8 fail this test)
-		jQuery.support.reliableHiddenOffsets = jQuery.support.reliableHiddenOffsets && tds[0].offsetHeight === 0;
+		jQuery.support.reliableHiddenOffsets = jQuery.support.reliableHiddenOffsets && td.offsetHeight === 0;
 		div.innerHTML = "";
 
+		var scrollTop = root.scrollTop,
+			bodyStyleOld = bodyStyle.cssText,
+			rootStyleOld = bodyStyle.cssText;
+
+		// using 8888 because it compresses better than something like 9000
+		divStyle.height = "8888px";
+
+		// make sure the div is display:block in case a CSS rule had set it to
+		// something else
+		divStyle.display = "block";
+
+		jQuery.support.scrollsHtml = ++root.scrollTop && root.scrollTop-- === ( scrollTop + 1 );
+
+		// restore original styles
+		bodyStyle.cssText = bodyStyleOld;
+		rootStyle.cssText = rootStyle.Old;
+
+		// clean up the div and apply bugfix for IE6 (#4014)
 		body.removeChild( div ).style.display = "none";
-		div = tds = null;
+		// release memory in IE
+		div = td = tds = null;
 	});
 
 	// Technique from Juriy Zaytsev
