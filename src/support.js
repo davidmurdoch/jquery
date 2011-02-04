@@ -74,10 +74,11 @@
 	select.disabled = true;
 	jQuery.support.optDisabled = !opt.disabled;
 
+	var root = document.documentElement;
+
 	jQuery.support.scriptEval = function() {
 		if ( jQuery.support._scriptEval === null ) {
-			var root = document.documentElement,
-				script = document.createElement("script"),
+			var script = document.createElement("script"),
 				id = "script" + jQuery.now();
 
 			script.type = "text/javascript";
@@ -99,7 +100,7 @@
 
 			root.removeChild( script );
 			// release memory in IE
-			root = script = id  = null;
+			script = id  = null;
 		}
 
 		return jQuery.support._scriptEval;
@@ -216,6 +217,6 @@
 	jQuery.support.changeBubbles = eventSupported("change");
 
 	// release memory in IE
-	div = all = a = null;
+	root = div = all = a = null;
 })();
 })( jQuery );
