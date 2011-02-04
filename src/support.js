@@ -73,7 +73,7 @@
 	// Make sure that the options inside disabled selects aren't marked as disabled
 	// (WebKit marks them as diabled)
 	select.disabled = true;
-	jQuery.support.optDisabled = !opt.disabled;
+    jQuery.support.optDisabled = !opt.disabled;
 
     jQuery.support.scriptEval = function() {
         if ( jQuery.support._scriptEval === null ) {
