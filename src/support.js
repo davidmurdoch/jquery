@@ -75,11 +75,10 @@
 	select.disabled = true;
 	jQuery.support.optDisabled = !opt.disabled;
 
-	var root = document.documentElement;
-
-	jQuery.support.scriptEval = function() {
+    jQuery.support.scriptEval = function() {
 		if ( jQuery.support._scriptEval === null ) {
-			var script = document.createElement("script"),
+            var root = document.documentElement,
+                script = document.createElement("script"),
 				id = "script" + jQuery.now();
 
 			script.type = "text/javascript";
@@ -101,7 +100,7 @@
 
 			root.removeChild( script );
 			// release memory in IE
-			script = id  = null;
+			root = script = id  = null;
 		}
 
 		return jQuery.support._scriptEval;
@@ -146,6 +145,7 @@
 		}
 
 		var div = document.createElement("div"),
+            root = document.documentElement,
 			divStyle = div.style,
 			bodyStyle = body.style,
 			rootStyle = root.style;
@@ -211,7 +211,7 @@
 		// clean up the div and apply bugfix for IE6 (#4014)
 		body.removeChild( div ).style.display = "none";
 		// release memory in IE
-		div = td = tds = null;
+		root = div = td = tds = null;
 	});
 
 	// Technique from Juriy Zaytsev
@@ -242,6 +242,6 @@
 	jQuery.support.changeBubbles = eventSupported("change");
 
 	// release memory in IE
-	root = div = all = a = null;
+	div = all = a = null;
 })();
 })( jQuery );
