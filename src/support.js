@@ -77,9 +77,9 @@
 
 	jQuery.support.scriptEval = function() {
 		if ( jQuery.support._scriptEval === null ) {
-		var root = document.documentElement,
-			script = document.createElement("script"),
-			id = "script" + jQuery.now();
+    	    var root = document.documentElement,
+			    script = document.createElement("script"),
+			    id = "script" + jQuery.now();
 
 			script.type = "text/javascript";
 			try {
@@ -150,7 +150,7 @@
 			bodyStyle = body.style,
 			rootStyle = root.style;
 
-		div.style.width = div.style.paddingLeft = "1px";
+		divStyle.width = divStyle.paddingLeft = "1px";
 		body.appendChild( div );
 		jQuery.boxModel = jQuery.support.boxModel = div.offsetWidth === 2;
 
@@ -193,7 +193,7 @@
 
 		var scrollTop = root.scrollTop,
 			bodyStyleOld = bodyStyle.cssText,
-			rootStyleOld = bodyStyle.cssText;
+			rootStyleOld = rootStyle.cssText;
 
 		// using 8888 because it compresses better than something like 9000
 		divStyle.height = "8888px";
@@ -206,7 +206,7 @@
 
 		// restore original styles
 		bodyStyle.cssText = bodyStyleOld;
-		rootStyle.cssText = rootStyle.Old;
+		rootStyle.cssText = rootStyleOld;
 
 		// clean up the div and apply bugfix for IE6 (#4014)
 		body.removeChild( div ).style.display = "none";
